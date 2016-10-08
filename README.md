@@ -18,9 +18,9 @@ Download & Build new version of Perl from source:
 	cd ~/app-root/data/
 	mkdir download
 	cd download
-	wget -c -nd http://www.cpan.org/src/5.0/perl-5.16.3.tar.gz
-	tar -xf perl-5.16.3.tar.gz
-	cd perl-5.16.3
+	wget -c -nd http://www.cpan.org/src/5.0/perl-5.24.0.tar.gz
+	tar -xf perl-5.24.0.tar.gz
+	cd perl-5.24.0
 	./Configure -des -Dprefix=~/app-root/data/perl-new
 	make 
 	make install
@@ -31,43 +31,23 @@ Then install additional Perl modules:
 
 	cd ~/app-root/data/perl-new/bin
 	HOME=~/app-root/data/ ./perl cpan
-	> cpan[1]    notest install Dancer Mojolicious DBD::Pg DBD::SQLite DBD::mysql and_other_modules
+	> cpan[1]    notest install Dancer2 Plack
 	> quit
 
 
 Roll your own webserver
 ----------------------
 
-To start your own web server run on host $OPENSHIFT_INTERNAL_IP and on port $OPENSHIFT_INTERNAL_PORT (usually port 8080)  :
+Test if it works 
 
 	cd ~/app-root/data/perl-new/bin
-	./perl morbo --listen 'http://$OPENSHIFT_INTERNAL_IP:$OPENSHIFT_INTERNAL_PORT' ~/app-root/runtime/repo/diy/mojoapp.pl
+	DANCER_SERVER=$OPENSHIFT_DIY_IP DANCER_PORT=$OPENSHIFT_DIY_PORT ~/app-root/data/perl-5.24.0/bin/perl ~/app-root/runtime/repo/diy/app.pl
 
 
-However, Please edit this file:
+Please see this file to autostart and stop your webserver.
 
 	.openshift/action_hooks/start
-
-to 
-
-	#!/bin/bash
-	nohup ~/app-root/data/perl-5.16.3/bin/perl ~/app-root/data/perl-5.16.3/bin/morbo --listen 'http://$OPENSHIFT_INTERNAL_IP:$OPENSHIFT_INTERNAL_PORT' ~/app-root/runtime/repo/diy/mojoapp.pl > /dev/null  2>&1 &
-
-to autostart your webserver.
-
-
-and also:
-
 	.openshift/action_hooks/stop
-
-to
-
-	#!/bin/bash
-	kill `ps -ef | grep morbo | grep -v grep | awk '{ print $2 }'` > /dev/null 2>&1
-	exit 0
-
-to stop your webserver.
-
 
 
 
@@ -75,6 +55,7 @@ Test on your browser:
 ----------------------
 
 	http://[diyapp]-[yournamespace].rhcloud.com
+	http://dancer2-imyaman.cloud.or.kr
 
 
 
