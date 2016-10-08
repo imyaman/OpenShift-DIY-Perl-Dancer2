@@ -1,10 +1,10 @@
 #!/bin/bash
+source $OPENSHIFT_CARTRIDGE_SDK_BASH
+
 # The logic to stop your application should be put in this script.
-
-# PLACKUP
-kill `ps -ef | grep plackup | grep -v grep | awk '{ print $2 }'` > /dev/null 2>&1
-
-# STARMAN
-#kill `ps -ef | grep starman | grep -v grep | awk '{ print $2 }'` > /dev/null 2>&1
-
-exit 0
+if [ -z "$(ps -f -u $USER 2>/dev/null | egrep -e plackup -e starman -e app.pl | egrep -v egrep)" ]
+then
+    client_result "Application is already stopped"
+else
+    kill `ps -f -u $USER 2>/dev/null | egrep -e plackup -e "starman master" -e perl | egrep -v egrep | awk '{ print $2 }'` > /dev/null 2>&1
+fi
