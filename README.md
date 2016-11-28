@@ -15,6 +15,8 @@ Create new app using diy cartridge:
 
 Download & Build new version of Perl from source:
 
+	echo $HOME  # check HOME doesn't have '/' in the end
+	export HOME=/var/lib/....  # if HOME has '/', remove '/'
 	cd ~/app-root/data/
 	mkdir download
 	cd download
