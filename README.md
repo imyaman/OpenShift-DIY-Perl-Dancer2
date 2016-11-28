@@ -9,7 +9,7 @@ Steps:
 
 Create new app using diy-0.1 cartridge:
 
-	rhc app create diyapp diy-0.1
+	rhc app create diyapp diy
 	rhc ssh -a diyapp
 
 
