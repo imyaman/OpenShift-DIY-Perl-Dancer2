@@ -7,7 +7,7 @@ Steps to support Perl 5.16 or newer version on OpenShift.com
 Steps:
 --------
 
-Create new app using diy-0.1 cartridge:
+Create new app using diy cartridge:
 
 	rhc app create diyapp diy
 	rhc ssh -a diyapp
@@ -18,8 +18,8 @@ Download & Build new version of Perl from source:
 	cd ~/app-root/data/
 	mkdir download
 	cd download
-	wget -c -nd http://www.cpan.org/src/5.0/perl-5.24.0.tar.gz
-	tar -xf perl-5.24.0.tar.gz
+	wget -c -nd http://www.cpan.org/src/5.0/perl-5.24.0.tar.xz
+	xzcat -dc perl-5.24.0.tar.xz | tar xf -
 	cd perl-5.24.0
 	./Configure -des -Dprefix=~/app-root/data/perl-new
 	make 
@@ -39,10 +39,15 @@ Roll your own webserver
 ----------------------
 
 Test if it works 
-
-	cd ~/app-root/data/perl-new/bin
-	DANCER_SERVER=$OPENSHIFT_DIY_IP DANCER_PORT=$OPENSHIFT_DIY_PORT ~/app-root/data/perl-5.24.0/bin/perl ~/app-root/runtime/repo/diy/app.pl
-
+	
+	git clone ssh://.... # use your application's git repository 
+	rm -rf diyapp/diy/*
+	cp -R OpenShift-DIY-Perl-Dancer2/diy/* diyapp/diy/
+	cp OpenShift-DIY-Perl-Dancer2/.openshift/action_hooks/start diyapp/.openshift/action_hooks/
+	cp OpenShift-DIY-Perl-Dancer2/.openshift/action_hooks/stop diyapp/.openshift/action_hooks/
+	cd diyapp
+	git push
+	
 
 Please see this file to autostart and stop your webserver.
 
@@ -50,12 +55,12 @@ Please see this file to autostart and stop your webserver.
 	.openshift/action_hooks/stop
 
 
-
 Test on your browser:
 ----------------------
 
 	http://[diyapp]-[yournamespace].rhcloud.com
-	http://dancer2-imyaman.cloud.or.kr
+	http://dancer2-imyaman.cloud.or.kr 
+	http://perldancer2openshift-imyaman.rhcloud.com
 
 
 
